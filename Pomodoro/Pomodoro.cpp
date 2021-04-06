@@ -46,7 +46,6 @@ Pomodoro::Pomodoro()
 
 	//default
 	currentRound = 1;
-	currentSession = 1;
 
 	Timer::Instance->set(queue.back().minutes, queue.back().seconds);
 	Timer::Instance->start();
@@ -55,7 +54,7 @@ Pomodoro::Pomodoro()
 
 std::string Pomodoro::getImage()
 {
-	std::string image = queue.back().title + "\n" + "Round: " + std::to_string(currentRound) + " / " + std::to_string(rounds) + " Session: " + std::to_string(currentSession) + " / " + std::to_string(sessions) + "\n" + "Press \'Space\' to pause and access commands mode.";
+	std::string image = queue.back().title + "\n" + "Round: " + std::to_string(currentRound) + " / " + std::to_string(rounds) + " Session: " + std::to_string(int(currentRound/sessions + 1)) + " / " + std::to_string(sessions) + "\n" + "Press \'Space\' to pause and access commands mode.";
 	return image;
 }
 
@@ -110,81 +109,54 @@ void Pomodoro::update()
 {
 	if (Timer::Instance->isEnded())
 	{
-		/*if (currentPeriod.name == focus.name) // FOCUS	
-		{
-			if (currentRound == rounds)
-			{
-				currentPeriod = longBreak;
-			}
-			else
-			{
-				currentPeriod = shortBreak;
-			}
-		}
-		else if (currentPeriod.name == shortBreak.name) // SHORT BRAKE
-		{
-			currentRound++;
-			currentPeriod = focus;
-		}
-		else // LONG BRAKE
-		{
-			currentRound = 1;
-			if (currentSession == sessions)
-			{
-				endFlag = true;
-			}
-			else
-			{
-				currentSession++;
-				currentPeriod = focus;
-			}
-		}
-		if (!endFlag)
-		{
-			Timer::Instance->set(currentPeriod.minutes, currentPeriod.seconds);
-			Timer::Instance->start();
-		}*/
 		nextPeriod();
 		Timer::Instance->set(queue.back().minutes, queue.back().seconds);
 		Timer::Instance->start();
 	}
 }
 
-Period & Pomodoro::getPeriod(std::string name)
-{
-	if (name == "Focus")
-	{
-		return focus;
-	}
-	else if (name == "LongBreak")
-	{
-		return longBreak;
-	}
-	else if ("ShortBreak")
-	{
-		return shortBreak;
-	}
-	else
-	{
-		return getCurrentPeriod();
-	}
-}
-
-Period& Pomodoro::getCurrentPeriod()
-{
-	return queue.back();
-}
-
 void Pomodoro::nextPeriod()
 {
 	queue.pop_back();
+	if (queue.size() % 2 == 0)
+		currentRound = rounds * sessions - int(queue.size() / 2) + 1;
+	else
+		currentRound = rounds * sessions - int(queue.size() / 2);
+}
+
+void Pomodoro::set(int sessions, int rounds)
+{
+	this->sessions = sessions;
+	this->rounds = rounds;
+	reset();
+}
+
+void Pomodoro::setFocusTimer(int minutes, int seconds)
+{
+	this->focus.minutes = minutes;
+	this->focus.seconds = seconds;
+}
+
+void Pomodoro::setShortBreakTimer(int minutes, int seconds)
+{
+	this->shortBreak.minutes = minutes;
+	this->shortBreak.seconds = seconds;
+}
+
+void Pomodoro::setLongBreakTimer(int minutes, int seconds)
+{
+	this->longBreak.minutes = minutes;
+	this->longBreak.seconds = seconds;
 }
 
 void Pomodoro::reset()
 {
 	endFlag = false;
-	currentRound = 0;
-	currentSession = 0;
+	createQueue(rounds, sessions);
+	if (queue.size() % 2 == 0)
+		currentRound = rounds * sessions - int(queue.size() / 2) + 1;
+	else
+		currentRound = rounds * sessions - int(queue.size() / 2);
 }
 
 std::ostream& operator<<(std::ostream& os, Pomodoro& dt)

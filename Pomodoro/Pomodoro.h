@@ -4,7 +4,6 @@
 struct Period
 {
 	std::string name;
-
 	int seconds;
 	int minutes;
 	std::string title;
@@ -14,9 +13,8 @@ class Pomodoro
 {
 private:
 	int sessions;
-	int currentSession;
-
 	int rounds;
+
 	int currentRound;
 	
 	Period longBreak;
@@ -30,24 +28,26 @@ private:
 	void createQueue(int s, int r);
 
 public:
-	Pomodoro();
 	static Pomodoro* Instance;
 
+	Pomodoro();
+
 	std::string getImage();
+	void set(int sessions, int rounds);
+	void setFocusTimer(int minutes, int seconds);
+	void setShortBreakTimer(int minutes, int seconds);
+	void setLongBreakTimer(int minutes, int seconds);
 
 	void saveCurrentState();
 	void loadState();
 	void loadSettings();
-
 	void loadTitles();
 
 	void update();
 
-	Period & getPeriod(std::string name);
-	Period & getCurrentPeriod();
-
 	void nextPeriod();
 	void reset();
+
 	friend std::ostream& operator<<(std::ostream& os, Pomodoro& dt);
 };
 

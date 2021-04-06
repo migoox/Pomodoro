@@ -22,7 +22,7 @@ void App::updateInput()
 	if (_kbhit())
 	{
 		button = _getch();
-		if (button == ' ' || button == ' ')
+		if (button == ' ')
 		{
 			SwitchToCommandsState();
 		}

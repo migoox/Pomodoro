@@ -83,18 +83,15 @@ void CommandInterpreter::CSet(std::vector<std::string> command)
 		{
 			if (command[1] == "short_break")
 			{
-				Pomodoro::Instance->getPeriod("ShortBreak").minutes = minutes;
-				Pomodoro::Instance->getPeriod("ShortBreak").seconds = seconds;
+
 			}
 			else if (command[1] == "long_break")
 			{
-				Pomodoro::Instance->getPeriod("LongBreak").minutes = minutes;
-				Pomodoro::Instance->getPeriod("LongBreak").seconds = seconds;
+
 			}
 			else if (command[1] == "focus")
 			{
-				Pomodoro::Instance->getPeriod("Focus").minutes = minutes;
-				Pomodoro::Instance->getPeriod("Focus").seconds = seconds;
+
 			}
 			else
 			{
@@ -114,7 +111,7 @@ void CommandInterpreter::CSet(std::vector<std::string> command)
 
 void CommandInterpreter::CSkip()
 {
-		
+	Pomodoro::Instance->nextPeriod();
 }
 
 void CommandInterpreter::CHelp()
