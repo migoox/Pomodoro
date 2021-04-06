@@ -12,6 +12,7 @@ public:
 	static void CResume();
 	static void CReset(std::string in);
 	static void CSet(std::vector<std::string> command);
+	static void CSkip();
 	static void CHelp();
 };
 

@@ -2,6 +2,22 @@
 
 Pomodoro* Pomodoro::Instance;
 
+void Pomodoro::createQueue(int s, int r)
+{
+	queue.clear();
+
+	for (int i = 0; i < s; i++)
+	{
+		queue.push_back(longBreak);
+		queue.push_back(focus);
+		for (int j = 0; j < r - 1; j++)
+		{
+			queue.push_back(shortBreak);
+			queue.push_back(focus);
+		}
+	}
+}
+
 Pomodoro::Pomodoro()
 {
 	Instance = this;
@@ -12,34 +28,34 @@ Pomodoro::Pomodoro()
 	// defaut
 	rounds = 4;
 	sessions = 3;
-	currentSession = 1;
 
-	longBreak.seconds = 0;
-	longBreak.minutes = 25;
+	longBreak.seconds = 5;
+	longBreak.minutes = 0;
 	longBreak.name = "LongBrake";
 
-	shortBreak.seconds = 0;
-	shortBreak.minutes = 4;
+	shortBreak.seconds = 4;
+	shortBreak.minutes = 0;
 	shortBreak.name = "ShortBrake";
 
-	focus.seconds = 30;
-	focus.minutes = 27;
+	focus.seconds = 3;
+	focus.minutes = 0;
 	focus.name = "Focus";
+
+	createQueue(sessions, rounds);
 	loadSettings();
 
 	//default
-	currentPeriod = focus;
 	currentRound = 1;
 	currentSession = 1;
 
-	Timer::Instance->set(currentPeriod.minutes, currentPeriod.seconds);
+	Timer::Instance->set(queue.back().minutes, queue.back().seconds);
 	Timer::Instance->start();
 	loadState();
 }
 
 std::string Pomodoro::getImage()
 {
-	std::string image = currentPeriod.title + "\n" + "Round: " + std::to_string(currentRound) + " / " + std::to_string(rounds) + " Session: " + std::to_string(currentSession) + " / " + std::to_string(sessions) + "\n" + "Press \'Space\' to pause and access commands mode.";
+	std::string image = queue.back().title + "\n" + "Round: " + std::to_string(currentRound) + " / " + std::to_string(rounds) + " Session: " + std::to_string(currentSession) + " / " + std::to_string(sessions) + "\n" + "Press \'Space\' to pause and access commands mode.";
 	return image;
 }
 
@@ -94,7 +110,7 @@ void Pomodoro::update()
 {
 	if (Timer::Instance->isEnded())
 	{
-		if (currentPeriod.name == focus.name) // FOCUS	
+		/*if (currentPeriod.name == focus.name) // FOCUS	
 		{
 			if (currentRound == rounds)
 			{
@@ -127,7 +143,10 @@ void Pomodoro::update()
 		{
 			Timer::Instance->set(currentPeriod.minutes, currentPeriod.seconds);
 			Timer::Instance->start();
-		}
+		}*/
+		nextPeriod();
+		Timer::Instance->set(queue.back().minutes, queue.back().seconds);
+		Timer::Instance->start();
 	}
 }
 
@@ -147,13 +166,18 @@ Period & Pomodoro::getPeriod(std::string name)
 	}
 	else
 	{
-		return currentPeriod;
+		return getCurrentPeriod();
 	}
 }
 
 Period& Pomodoro::getCurrentPeriod()
 {
-	return currentPeriod;
+	return queue.back();
+}
+
+void Pomodoro::nextPeriod()
+{
+	queue.pop_back();
 }
 
 void Pomodoro::reset()
@@ -161,7 +185,6 @@ void Pomodoro::reset()
 	endFlag = false;
 	currentRound = 0;
 	currentSession = 0;
-	currentPeriod = focus;
 }
 
 std::ostream& operator<<(std::ostream& os, Pomodoro& dt)

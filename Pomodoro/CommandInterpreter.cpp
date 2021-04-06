@@ -112,6 +112,11 @@ void CommandInterpreter::CSet(std::vector<std::string> command)
 	}
 }
 
+void CommandInterpreter::CSkip()
+{
+		
+}
+
 void CommandInterpreter::CHelp()
 {
 	std::cout << "COMMAND LIST: \n resume(r) - programm returns to pomodoro.\n";
@@ -120,6 +125,7 @@ void CommandInterpreter::CHelp()
 	std::cout << "\n set(s) [period_type] [minutes] [seconds] - sets timers on chosen period.\n";
 	std::cout << "\n set(s) rounds [amount_of_rounds] - sets amount of rounds. WARNING: COMMAND RESETS YOUR PROGRESS\n";
 	std::cout << "\n set(s) sessions [amount_of_sessions] - sets timers on chosen period. WARNING: COMMAND RESETS YOUR PROGRESS\n";
+	std::cout << "\n skip(sk) - skips current period\n";
 }
 
 

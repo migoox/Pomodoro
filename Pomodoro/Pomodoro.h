@@ -23,9 +23,11 @@ private:
 	Period shortBreak;
 	Period focus;
 
-	Period currentPeriod;
+	std::vector<Period> queue;
 
 	bool endFlag;
+
+	void createQueue(int s, int r);
 
 public:
 	Pomodoro();
@@ -44,7 +46,7 @@ public:
 	Period & getPeriod(std::string name);
 	Period & getCurrentPeriod();
 
-
+	void nextPeriod();
 	void reset();
 	friend std::ostream& operator<<(std::ostream& os, Pomodoro& dt);
 };
