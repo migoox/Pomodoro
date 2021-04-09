@@ -8,12 +8,12 @@ void Pomodoro::createQueue(int s, int r)
 
 	for (int i = 0; i < s; i++)
 	{
-		queue.push_back(longBreak);
-		queue.push_back(focus);
+		queue.push_back(&longBreak);
+		queue.push_back(&focus);
 		for (int j = 0; j < r - 1; j++)
 		{
-			queue.push_back(shortBreak);
-			queue.push_back(focus);
+			queue.push_back(&shortBreak);
+			queue.push_back(&focus);
 		}
 	}
 }
@@ -47,14 +47,14 @@ Pomodoro::Pomodoro()
 	//default
 	currentRound = 1;
 
-	Timer::Instance->set(queue.back().minutes, queue.back().seconds);
+	Timer::Instance->set(queue.back()->minutes, queue.back()->seconds);
 	Timer::Instance->start();
 	loadState();
 }
 
 std::string Pomodoro::getImage()
 {
-	std::string image = queue.back().title + "\n" + "Round: " + std::to_string(currentRound) + " / " + std::to_string(rounds) + " Session: " + std::to_string(int(currentRound/sessions + 1)) + " / " + std::to_string(sessions) + "\n" + "Press \'Space\' to pause and access commands mode.";
+	std::string image = queue.back()->title + "\n" + "Round: " + std::to_string(currentRound) + " / " + std::to_string(rounds) + " Session: " + std::to_string(int(currentRound/sessions + 1)) + " / " + std::to_string(sessions) + "\n" + "Press \'Space\' to pause and access commands mode.";
 	return image;
 }
 
@@ -110,9 +110,14 @@ void Pomodoro::update()
 	if (Timer::Instance->isEnded())
 	{
 		nextPeriod();
-		Timer::Instance->set(queue.back().minutes, queue.back().seconds);
+		Timer::Instance->set(queue.back()->minutes, queue.back()->seconds);
 		Timer::Instance->start();
 	}
+}
+
+void Pomodoro::resetTimer()
+{
+	Timer::Instance->set(queue.back()->minutes, queue.back()->seconds);
 }
 
 void Pomodoro::nextPeriod()
@@ -129,6 +134,16 @@ void Pomodoro::set(int sessions, int rounds)
 	this->sessions = sessions;
 	this->rounds = rounds;
 	reset();
+}
+
+void Pomodoro::setAmountOfSessions(int amount)
+{
+	sessions = amount;
+}
+
+void Pomodoro::setAmountOfRounds(int amount)
+{
+	rounds = amount;
 }
 
 void Pomodoro::setFocusTimer(int minutes, int seconds)

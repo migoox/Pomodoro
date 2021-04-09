@@ -37,7 +37,11 @@ void CommandInterpreter::Interpret(std::string input)
 	}
 	else if (command[0] == "set" || command[0] == "s")
 	{
-		
+		CSet(command);
+	}
+	else if (command[0] == "skip" || command[0] == "sk")
+	{
+		CSkip();
 	}
 	else
 	{
@@ -58,14 +62,16 @@ void CommandInterpreter::CReset(std::string in)
 	}
 	else
 	{
-		Timer::Instance->reset();
+		Pomodoro::Instance->resetTimer();
 	}
+	App::RefreshScreen();
 }
 
 void CommandInterpreter::CSet(std::vector<std::string> command)
 {
 	auto fail = []() { return "set command failed"; };
-	if (command.size() == 3)
+
+	if (command.size() == 4)
 	{
 		int minutes, seconds;
 		bool failStatus = false;
@@ -83,35 +89,67 @@ void CommandInterpreter::CSet(std::vector<std::string> command)
 		{
 			if (command[1] == "short_break")
 			{
-
+				Pomodoro::Instance->setShortBreakTimer(minutes, seconds);
 			}
 			else if (command[1] == "long_break")
 			{
-
+				Pomodoro::Instance->setLongBreakTimer(minutes, seconds);
 			}
 			else if (command[1] == "focus")
 			{
-
+				Pomodoro::Instance->setFocusTimer(minutes, seconds);
 			}
 			else
 			{
-				fail();
+				std::cout << fail();
 			}
 		}
+		else
+		{
+			std::cout << fail();
+		}
 	}
-	else if (command.size() == 2)
+	else if (command.size() == 3)
 	{
-		fail();
+		int amount;
+		bool failStatus = false;
+		try
+		{
+			amount = std::stoi(command[2]);
+		}
+		catch (...)
+		{
+			fail();
+			failStatus = true;
+		}
+
+		if (command[1] == "rounds")
+		{
+			Pomodoro::Instance->setAmountOfRounds(amount);
+		}
+		else if (command[1] == "sessions")
+		{
+			Pomodoro::Instance->setAmountOfSessions(amount);
+		}
+		else
+		{
+			std::cout << fail();
+
+		}
+
 	}
 	else
 	{
-		fail();
+		std::cout<< fail();
 	}
+	App::RefreshScreen();
 }
 
 void CommandInterpreter::CSkip()
 {
 	Pomodoro::Instance->nextPeriod();
+	App::RefreshScreen();
+
 }
 
 void CommandInterpreter::CHelp()

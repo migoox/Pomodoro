@@ -21,7 +21,7 @@ private:
 	Period shortBreak;
 	Period focus;
 
-	std::vector<Period> queue;
+	std::vector<Period*> queue;
 
 	bool endFlag;
 
@@ -34,6 +34,8 @@ public:
 
 	std::string getImage();
 	void set(int sessions, int rounds);
+	void setAmountOfSessions(int amount);
+	void setAmountOfRounds(int amount);
 	void setFocusTimer(int minutes, int seconds);
 	void setShortBreakTimer(int minutes, int seconds);
 	void setLongBreakTimer(int minutes, int seconds);
@@ -45,6 +47,7 @@ public:
 
 	void update();
 
+	void resetTimer();
 	void nextPeriod();
 	void reset();
 

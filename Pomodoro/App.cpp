@@ -70,6 +70,15 @@ bool App::CommandsState()
 {
 	return commandsState;
 }
+void App::RefreshScreen()
+{
+	if (commandsState)
+	{
+		system("cls");
+		std::cout << *Timer::Instance;
+		std::cout << *Pomodoro::Instance;
+	}
+}
 float App::DeltaTime()
 {
 	return dTime;

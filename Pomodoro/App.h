@@ -27,6 +27,7 @@ public:
 	static void SwitchToCommandsState();
 	static void SwitchToPomodoroState();
 	static bool CommandsState();
+	static void RefreshScreen();
 	static float DeltaTime();
 };
 
