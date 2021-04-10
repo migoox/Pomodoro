@@ -29,16 +29,16 @@ Pomodoro::Pomodoro()
 	rounds = 4;
 	sessions = 3;
 
-	longBreak.seconds = 5;
-	longBreak.minutes = 0;
+	longBreak.seconds = 0;
+	longBreak.minutes = 25;
 	longBreak.name = "LongBrake";
 
-	shortBreak.seconds = 4;
-	shortBreak.minutes = 0;
+	shortBreak.seconds = 0;
+	shortBreak.minutes = 4;
 	shortBreak.name = "ShortBrake";
 
-	focus.seconds = 3;
-	focus.minutes = 0;
+	focus.seconds = 30;
+	focus.minutes = 27;
 	focus.name = "Focus";
 
 	createQueue(sessions, rounds);

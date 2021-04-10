@@ -23,6 +23,7 @@ public:
 	void update();
 	void render();
 	void run();
+	void cls();
 
 	static void SwitchToCommandsState();
 	static void SwitchToPomodoroState();
